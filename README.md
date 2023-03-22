@@ -5,7 +5,8 @@ This repository contains various projects that I have worked on.
 ### WiTH Africa Data Challenge
 
 In this project, I used Python and Jupyter Notebook to analyze tourism data from various African countries. 
-
+#### View
+* View the notebook with rendered output cells [here](https://nbviewer.org/github/dhruv-pandit/Projects/blob/main/WiTH_Africa_Data_Challenge/with_ariceEDA.ipynb) since github does not render dynamic plotly outputs.
 #### Installation 
 
 To run this notebook on your local machine, please make sure you have Python 3.10.7 installed. Also, install the following packages:
