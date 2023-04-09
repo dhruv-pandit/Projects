@@ -3,7 +3,6 @@
 This repository contains various projects that I have worked on. 
 
 ### WiTH Africa Data Challenge
-![africa.png](attachment:africa.png)
 In this project, I used Python and Jupyter Notebook to analyze tourism data from various African countries. 
 #### View
 * View the notebook with rendered output cells [here](https://nbviewer.org/github/dhruv-pandit/Projects/blob/main/WiTH_Africa_Data_Challenge/with_ariceEDA.ipynb) since github does not render dynamic plotly outputs.
