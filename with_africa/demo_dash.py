@@ -8,9 +8,14 @@ import base64
 import plotly.express as px
 import pandas as pd
 import sqlite3
+import requests
 # Connect to the database (it will be created if it doesn't exist)
-url = 'https://raw.githubusercontent.com/dhruv-pandit/Projects/blob/main/with_africa/data_discovery_db.sqlite'
-conn = sqlite3.connect(url)
+url = 'https://github.com/dhruv-pandit/Projects/raw/1e99b17eeeb01254051e6b73a158e64e6cef390c/with_africa/data_discovery_db.sqlite'
+response = requests.get(url)
+with open("data_discovery_db.sqlite", 'wb') as f:
+    f.write(response.content)
+
+conn = sqlite3.connect("data_discovery_db.sqlite")
 cursor = conn.cursor()
 
 # Retrieve data from each table and store in separate DataFrames
@@ -32,8 +37,13 @@ latest_indices = df_ddt_demo.groupby(['indicator_source', 'indicator_ddt_name', 
 df_filtered = df_ddt_demo.loc[latest_indices]
 # Initialize Dash app
 app = dash.Dash(__name__)
-image_filename = 'https://raw.githubusercontent.com/dhruv-pandit/Projects/blob/main/with_africa/wa.png'  # replace with your local image path
-encoded_image = base64.b64encode(open(image_filename, 'rb').read()).decode('ascii')
+image_filename = 'https://raw.githubusercontent.com/dhruv-pandit/Projects/1e99b17eeeb01254051e6b73a158e64e6cef390c/with_africa/wa.png'  # replace with your local image path
+
+# Download the image
+response = requests.get(image_filename)
+image_content = response.content
+
+encoded_image = base64.b64encode(image_content).decode('ascii')
 
 # Prepare your treemap
 df_filtered['values'] = 2
