@@ -28,7 +28,7 @@ principal_components = pca.fit_transform(scaled_data)
 
 # Create a Dash app
 app = dash.Dash(__name__)
-
+server = app.server
 app.layout = html.Div([
     html.H1("Principal Component Analysis of Portuguese Legislative Elections (2019)", style={'textAlign': 'center'}),
     
