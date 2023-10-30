@@ -9,8 +9,8 @@ import plotly.express as px
 import pandas as pd
 import sqlite3
 # Connect to the database (it will be created if it doesn't exist)
-url = 'https://raw.githubusercontent.com/dhruv-pandit/Projects/blob/main/WiTH_Africa_Data_Challenge/data_discovery_db.sqlite'
-conn = sqlite3.connect('/Users/dhruvpandit/Documents/GitHub/with-data-proccesing/datasets/data_discovery_db.sqlite')
+url = 'https://raw.githubusercontent.com/dhruv-pandit/Projects/blob/main/with_africa/data_discovery_db.sqlite'
+conn = sqlite3.connect(url)
 cursor = conn.cursor()
 
 # Retrieve data from each table and store in separate DataFrames
@@ -32,7 +32,7 @@ latest_indices = df_ddt_demo.groupby(['indicator_source', 'indicator_ddt_name', 
 df_filtered = df_ddt_demo.loc[latest_indices]
 # Initialize Dash app
 app = dash.Dash(__name__)
-image_filename = 'https://raw.githubusercontent.com/dhruv-pandit/Projects/blob/main/WiTH_Africa_Data_Challenge/wa.png'  # replace with your local image path
+image_filename = 'https://raw.githubusercontent.com/dhruv-pandit/Projects/blob/main/with_africa/wa.png'  # replace with your local image path
 encoded_image = base64.b64encode(open(image_filename, 'rb').read()).decode('ascii')
 
 # Prepare your treemap
