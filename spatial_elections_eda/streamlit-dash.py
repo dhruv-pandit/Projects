@@ -7,7 +7,8 @@ from streamlit_folium import folium_static
 from streamlit_folium import st_folium
 import pandas as pd
 from sklearn.decomposition import PCA
-
+from pysal.explore import esda
+from pysal.lib import weights
 # Load the data
 @st.cache_data
 def load_data():
@@ -24,6 +25,59 @@ def scale_data(_new_gdf):
     # ... [rest of your scaling code here]
     return gdf_demo_scal
 
+def weight_df(weight, gdf_demo_scal):
+    knn_df = gdf_demo_scal.copy()
+    for each in knn_df.columns:
+        knn_df[each] = weights.spatial_lag.lag_spatial(
+            weight, gdf_demo_scal["Centre_l"]
+        )
+    return knn_df
+def show_choropleth(df_scatter,gdf_demo_scal, knn_df, selection):
+    option = st.selectbox(df_scatter.columns)
+    # Create two choropleth maps
+    m1 = folium.Map(location=[39.4, -8.2], zoom_start=6)
+    m2 = folium.Map(location=[39.4, -8.2], zoom_start=6)
+
+    choropleth1 = folium.Choropleth(
+        geo_data=gdf_demo_scal,
+        name="choropleth",
+        data=gdf_demo_scal,
+        columns=["concelhos_", option],
+        key_on="feature.properties.concelhos_",
+        fill_color="YlGn",
+        fill_opacity=0.7,
+        line_opacity=0.2,
+        legend_name=option
+    ).add_to(m1)
+
+    # You can customize the choropleth2 settings as needed
+    choropleth2 = folium.Choropleth(
+        geo_data=knn_df,
+        name="choropleth",
+        data=knn_df,
+        columns=["concelhos_", option],  # Change 'option' to another column if needed
+        key_on="feature.properties.concelhos_",
+        fill_color="YlGn",
+        fill_opacity=0.7,
+        line_opacity=0.2,
+        legend_name=option
+    ).add_to(m2)
+
+    # Create two columns to display the maps side by side
+    col1, col2 = st.beta_columns(2)
+
+    # Display the maps in the columns
+    with col1:
+        st.write("""
+    ### Original Values Distribution
+    """)
+        st_folium(m1)
+
+    with col2:
+        st.write(f"""
+    ### Spatially Lagged Values Distribution Using {selection}
+    """)
+        st_folium(m2)
 
 # Main function to run the app
 def main():
@@ -115,6 +169,27 @@ def main():
     loadings = pca.components_[selected_index]
     fig_loadings = px.bar(x=df_scatter.columns, y=loadings, labels={'x':'Feature', 'y':'Loading'})
     st.plotly_chart(fig_loadings)
+
+
+
+    selection = st.radio("Choose a method:", ('KNN', 'Queen'))
+
+    # If KNN is selected, display the slider
+    if selection == 'KNN':
+        knn_value = st.slider('Select KNN value:', min_value=3, max_value=8)
+        st.write(f"You selected KNN with value: {knn_value} neighbours")
+        # Generate Weights from the GeoDataFrame
+        weight = weights.KNN.from_dataframe(gdf_demo_scal, k=knn_value)
+        # Row-standardization
+        weight.transform = "R"
+        knn_df = weight_df(weight, gdf_demo_scal)
+        show_choropleth(df_scatter, gdf_demo_scal, knn_df, selection)
+    else:
+        st.write("You selected Queen.")
+        w_q = weights.contiguity.Queen.from_dataframe(gdf_demo_scal)
+        w_q.transform = 'R'
+        queen_df = weight_df(w_q, gdf_demo_scal)
+        show_choropleth(df_scatter, gdf_demo_scal, queen_df, selection)
 
 if __name__ == "__main__":
     main()
