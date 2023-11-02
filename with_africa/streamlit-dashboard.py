@@ -64,7 +64,7 @@ with col1:
         colorbar_tickvals=tick_values,  # Set the tick values manually
         colorbar_ticktext=tick_values
     ))
-    background_color = 'rgb(15, 17, 22)'
+    background_color = 'white'
 
     fig_choro.update_layout(coloraxis={"colorbar":{"dtick":1}})
     fig_choro.update_layout(
