@@ -13,7 +13,7 @@ def load_data():
     with open("tourism_dashboard.sqlite", 'wb') as f:
         f.write(response.content)
 
-    conn = sqlite3.connect('datasets/databases/tourism_dashboard.sqlite')
+    conn = sqlite3.connect('tourism_dashboard.sqlite')
     query = """
     SELECT c.Country_Name as Country, 
         r.Region_Name as Region, 
@@ -38,7 +38,7 @@ def load_tables():
     with open("tourism_dashboard.sqlite", 'wb') as f:
         f.write(response.content)
 
-    conn = sqlite3.connect('datasets/databases/tourism_dashboard.sqlite')
+    conn = sqlite3.connect('tourism_dashboard.sqlite')
 
     # Query the InfoText table and save to a dataframe
     df_infotext = pd.read_sql("SELECT * FROM InfoText", conn)
