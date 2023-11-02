@@ -5,6 +5,21 @@ import plotly.express as px
 import sqlite3
 import matplotlib.pyplot as plt
 import requests
+streamlit_style = """
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+
+    html, body, [class*="css"] {
+    font-family: 'Open Sans';
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+    }
+    </style>
+"""
+st.markdown(streamlit_style, unsafe_allow_html=True)
 
 @st.cache_data
 def load_data():
@@ -26,6 +41,8 @@ df_infotext, df_scorelegend = load_tables()
 df_eoa = load_data()
 st.title("African Tourism Data Accessibility (2023)")
 st.write("""
+    Version 0.0.8
+
 _____
 """)
 countries = df_eoa['Country'].unique().tolist()
