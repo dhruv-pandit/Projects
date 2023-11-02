@@ -169,8 +169,8 @@ with tab2:
 
         # Customize the layout
         fig.update_layout(
-            title=dict(text='Mean Value by Region', font=dict(size=25, family="Futura", color="white")),
-            xaxis=dict(title='Mean Value', tickfont=dict(size=20, family="Futura"), range=[0, 4]),
+            title=dict(text='Median Value by Region', font=dict(size=25, family="Futura", color="white")),
+            xaxis=dict(title='Median Value', tickfont=dict(size=20, family="Futura"), range=[0, 4]),
             yaxis=dict(title='Region', tickfont=dict(size=20, family="Futura")),
             font=dict(family="Futura", size=19),
             showlegend=False,
