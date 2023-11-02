@@ -3,7 +3,6 @@ import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
 import sqlite3
-import seaborn as sns
 import matplotlib.pyplot as plt
 import requests
 
