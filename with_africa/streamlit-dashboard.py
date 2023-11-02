@@ -11,7 +11,7 @@ streamlit_style = """
     @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
 
     html, body, [class*="css"] {
-    font-family: 'Open Sans';
+    font-family: 'Open Sans'; sans-serif
     }
 
     h1, h2, h3, h4, h5, h6 {
@@ -20,7 +20,7 @@ streamlit_style = """
     </style>
 """
 st.markdown(streamlit_style, unsafe_allow_html=True)
-
+#st.set_page_config(layout="wide")
 @st.cache_data
 def load_data():
     url = 'https://github.com/dhruv-pandit/Projects/raw/main/with_africa/with_eoa_copy.xlsx'
@@ -41,7 +41,7 @@ df_infotext, df_scorelegend = load_tables()
 df_eoa = load_data()
 st.title("African Tourism Data Accessibility (2023)")
 st.write("""
-    Version 0.0.8
+    Version 0.0.10
 
 _____
 """)
@@ -97,7 +97,7 @@ with col1:
     plot_bgcolor=background_color,
         height=700,
         width=400,
-        font=dict(family="Futura")  # Set the font family to "Futura"
+        font=dict(family="Open Sans")  # Set the font family to "Open Sans"
     )
 
     # Center the title text
@@ -158,10 +158,10 @@ with tab2:
 
         # Customize the layout
         fig.update_layout(
-            title=dict(text='Mean Value by Region', font=dict(size=25, family="Futura", color="white")),
-            xaxis=dict(title='Mean Value', tickfont=dict(size=20, family="Futura"), range=[0, 4]),
-            yaxis=dict(title='Region', tickfont=dict(size=20, family="Futura")),
-            font=dict(family="Futura", size=19),
+            title=dict(text='Mean Value by Region', font=dict(size=25, family="Open Sans", color="white")),
+            xaxis=dict(title='Mean Value', tickfont=dict(size=20, family="Open Sans"), range=[0, 4]),
+            yaxis=dict(title='Region', tickfont=dict(size=20, family="Open Sans")),
+            font=dict(family="Open Sans", size=19),
             showlegend=False,
             plot_bgcolor=background_color,
             paper_bgcolor=background_color,
@@ -186,10 +186,10 @@ with tab2:
 
         # Customize the layout
         fig.update_layout(
-            title=dict(text='Median Value by Region', font=dict(size=25, family="Futura", color="white")),
-            xaxis=dict(title='Median Value', tickfont=dict(size=20, family="Futura"), range=[0, 4]),
-            yaxis=dict(title='Region', tickfont=dict(size=20, family="Futura")),
-            font=dict(family="Futura", size=19),
+            title=dict(text='Median Value by Region', font=dict(size=25, family="Open Sans", color="white")),
+            xaxis=dict(title='Median Value', tickfont=dict(size=20, family="Open Sans"), range=[0, 4]),
+            yaxis=dict(title='Region', tickfont=dict(size=20, family="Open Sans")),
+            font=dict(family="Open Sans", size=19),
             showlegend=False,
             plot_bgcolor=background_color,
             paper_bgcolor=background_color,
@@ -210,10 +210,10 @@ with tab2:
 
         # Customize the layout
         fig.update_layout(
-            title=dict(text='Box Plot of Values by Region', font=dict(size=25, family="Futura", color="white")),
-            xaxis=dict(title='Region', tickfont=dict(size=20, family="Futura")),
-            yaxis=dict(title='Value', tickfont=dict(size=20, family="Futura")),
-            font=dict(family="Futura", size=19),
+            title=dict(text='Box Plot of Values by Region', font=dict(size=25, family="Open Sans", color="white")),
+            xaxis=dict(title='Region', tickfont=dict(size=20, family="Open Sans")),
+            yaxis=dict(title='Value', tickfont=dict(size=20, family="Open Sans")),
+            font=dict(family="Open Sans", size=19),
             plot_bgcolor=background_color,
             paper_bgcolor=background_color,
             showlegend=False
@@ -246,17 +246,16 @@ with tab2:
                     y='Region',
                     color='EOA_Score',
                     orientation='h',
-                    title='Stacked Bar Plot Showing the Number of Countries for Each Ease of Access Score by Region',
-                    color_discrete_map=color_map,
+                    color_continuous_scale = 'oranges', #color_discrete_sequence=color_map,
                     labels={'Ease of Access': 'Ease of Access Score'}
         )
 
         # Customize the layout
         fig_bar.update_layout(
             barmode='stack',
-            xaxis=dict(title='Count', tickfont=dict(size=20, family="Futura")),
-            yaxis=dict(title='Region', categoryorder='total ascending', tickfont=dict(size=20, family="Futura")),
-            font=dict(family="Futura", size=19),
+            xaxis=dict(title='Count', tickfont=dict(size=20, family="Open Sans")),
+            yaxis=dict(title='Region', categoryorder='total ascending', tickfont=dict(size=20, family="Open Sans")),
+            font=dict(family="Open Sans", size=19),
             plot_bgcolor=background_color,
             paper_bgcolor=background_color,
             legend_title=dict(text="Ease of Access Score")
