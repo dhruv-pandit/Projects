@@ -8,46 +8,19 @@ import requests
 
 @st.cache_data
 def load_data():
-    url = 'https://github.com/dhruv-pandit/Projects/raw/1e99b17eeeb01254051e6b73a158e64e6cef390c/with_africa/tourism_dashboard.sqlite'
-    response = requests.get(url)
-    with open("tourism_dashboard.sqlite", 'wb') as f:
-        f.write(response.content)
+    url = 'https://github.com/dhruv-pandit/Projects/raw/main/with_africa/with_eoa_copy.xlsx'
 
-    conn = sqlite3.connect('tourism_dashboard.sqlite')
-    query = """
-    SELECT c.Country_Name as Country, 
-        r.Region_Name as Region, 
-        c.ISO3_Code, 
-        c.Link_to_Statistical_Agency as Link, 
-        c.Description as Comments, 
-        c.Ease_of_Access_Score as EOA_Score 
-    FROM Country c 
-    JOIN Region r ON c.Region_ID = r.Region_ID
-    """
+    df = pd.read_excel(url, sheet_name = 'eoa_dashboard_data').rename(columns={'ISO3 Code' : 'ISO3_Code', 'Ease of Access' : 'EOA_Score'})
 
-    # Fetch the data and create a DataFrame
-    df = pd.read_sql(query, conn)
-
-    # Close the connection
-    conn.close()
     return df
 
 def load_tables():
-    url = 'https://github.com/dhruv-pandit/Projects/raw/1e99b17eeeb01254051e6b73a158e64e6cef390c/with_africa/tourism_dashboard.sqlite'
-    response = requests.get(url)
-    with open("tourism_dashboard.sqlite", 'wb') as f:
-        f.write(response.content)
-
-    conn = sqlite3.connect('tourism_dashboard.sqlite')
-
-    # Query the InfoText table and save to a dataframe
-    df_infotext = pd.read_sql("SELECT * FROM InfoText", conn)
+    url = 'https://github.com/dhruv-pandit/Projects/raw/main/with_africa/with_eoa_copy.xlsx'
+    df_infotext = pd.read_excel(url, sheet_name = 'infottext')
 
     # Query the ScoreLegend table and save to a dataframe
-    df_scorelegend = pd.read_sql("SELECT * FROM ScoreLegend", conn)
-    df_scorelegend.rename(columns = {'Legend_Description' : 'Legend'}, inplace = True)
-    # Close the connection
-    conn.close()
+    df_scorelegend = pd.read_excel(url, sheet_name = 'legend')
+
     return df_infotext, df_scorelegend
 df_infotext, df_scorelegend = load_tables()
 df_eoa = load_data()
