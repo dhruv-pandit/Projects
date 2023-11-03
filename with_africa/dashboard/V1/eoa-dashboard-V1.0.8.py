@@ -31,9 +31,11 @@ def load_data():
 
     return df
 def load_data_new():
-    df_org_results = pd.read_excel(r'/Users/dhruvpandit/Documents/GitHub/with-data-proccesing/datasets/open_data_paper/results.xlsx', sheet_name='organisations')
-    df_ngos_results = pd.read_excel(r'/Users/dhruvpandit/Documents/GitHub/with-data-proccesing/datasets/open_data_paper/results.xlsx', sheet_name='ngos')
-    df_gov_results = pd.read_excel(r'/Users/dhruvpandit/Documents/GitHub/with-data-proccesing/datasets/open_data_paper/results.xlsx', sheet_name='government_sources')
+    
+    url = 'https://github.com/dhruv-pandit/Projects/raw/main/with_africa/dashboard/results.xlsx'
+    df_org_results = pd.read_excel(url, sheet_name='organisations')
+    df_ngos_results = pd.read_excel(url, sheet_name='ngos')
+    df_gov_results = pd.read_excel(url, sheet_name='government_sources')
     return df_gov_results, df_ngos_results, df_org_results
 
 def load_tables():
