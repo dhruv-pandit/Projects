@@ -42,6 +42,7 @@ df_eoa = load_data()
 st.title("African Tourism Data Accessibility (2023)")
 st.write("""
     Version 0.0.10
+    (**please click on three dots > settings > click on wide mode**) 
 
 _____
 """)
