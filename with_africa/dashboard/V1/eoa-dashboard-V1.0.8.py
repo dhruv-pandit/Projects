@@ -53,7 +53,7 @@ df_gov_results, df_ngos_results, df_org_results = load_data_new()
 st.title("African Tourism Data Accessibility (2023)")
 st.write("""
     Version 1.0.3
-    (**please click on three dots > settings > click on wide mode**) 
+    (**please click on three dots > settings > click on wide mode and change theme to light mode**) 
 _____
 
 """)
