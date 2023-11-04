@@ -54,7 +54,7 @@ df_gov_results, df_ngos_results, df_org_results = load_data_new()
 
 st.title("African Tourism Data Accessibility (2023)")
 st.write("""
-    Version 1.0.3
+    Version 1.0.4
     (**please click on three dots > settings > click on wide mode and change theme to light mode**) 
 _____
 
@@ -90,20 +90,33 @@ with col1:
     max_value = df_gov_results[dic[option]].max()
 
     # Generate a list of integer ticks between the minimum and maximum values
-    #tick_values = list(range(min_value, max_value + 1))
-
-
+    tick_values = list(range(int(min_value), int(max_value) + 1))
 
     # Create the choropleth map figure
-    fig_choro = go.Figure(data=go.Choropleth(
-        locations=df_gov_results['country'],  # Country names
-        z=df_gov_results[dic[option]],  # Ease of Access scores
-        locationmode='country names',  # Use country names as locations
-        colorscale=custom_colorscale,  # Use the custom colorscale
-        colorbar_title=option,
-        # colorbar_tickvals=tick_values,  # Set the tick values manually
-        # colorbar_ticktext=tick_values
-    ))
+
+
+    
+    if option == 'Machine Readability Data Available':
+        fig_choro = go.Figure(data=go.Choropleth(
+            locations=df_gov_results['country'],  # Country names
+            z=df_gov_results[dic[option]],  # Ease of Access scores
+            locationmode='country names',  # Use country names as locations
+            colorscale='oranges_r',  # Use the custom colorscale
+            colorbar_title=option,
+            colorbar_tickvals=tick_values,  # Set the tick values manually
+            colorbar_ticktext=tick_values
+        ))
+    else: 
+        fig_choro = go.Figure(data=go.Choropleth(
+            locations=df_gov_results['country'],  # Country names
+            z=df_gov_results[dic[option]],  # Ease of Access scores
+            locationmode='country names',  # Use country names as locations
+            colorscale='oranges_r',  # Use the custom colorscale
+            colorbar_title=option,
+            # colorbar_tickvals=tick_values,  # Set the tick values manually
+            # colorbar_ticktext=tick_values
+        ))
+
     background_color = 'white'
 
     fig_choro.update_layout(coloraxis={"colorbar":{"dtick":1}})
@@ -128,10 +141,11 @@ with col1:
 
     # Customize hover label font size
     fig_choro.update_layout(hoverlabel=dict(bgcolor='grey', bordercolor='black', font=dict(size=8)))
-    # fig.add_annotation(text="Source: WiTH Africa, 2023", xref="paper", yref="paper",
-    #                 x=0, y=-0.1, showarrow=False, font=dict(size=15, color="lightgray"))
+    fig_choro.add_annotation(text="Source: WiTH Africa, 2023, Lighter shades indicate better performance", xref="paper", yref="paper",
+                    x=0, y=-0.1, showarrow=False, font=dict(size=15, color="lightgray"))
 
     st.plotly_chart(fig_choro,  use_container_width=True)
+    st.write("Findings reflect the state of the African tourism data ecosystem between late August and early October 2023. Data was rigorously sourced from primary statistical agencies across Africa, supplemented by tourism ministries and central banks where necessary.")
 
 with col2:
     option = st.selectbox(
@@ -157,9 +171,8 @@ with col2:
 
     **Security Warning Status**: {security_stat[0]} 
 
-    *Link to Website*: {link}
+    *Link to Website*: {link} (Last accessed October 2023)
     """)
-st.write("Findings reflect the state of the African tourism data ecosystem between late August and early October 2023. Data was rigorously sourced from primary statistical agencies across Africa, supplemented by tourism ministries and central banks where necessary.")
 
 
 
@@ -187,6 +200,9 @@ treemap.data[0].hovertemplate = '%{label} <br>Recency: %{color:.0f} <br>Number o
 
 treemap.update_layout(margin = dict(t=50, l=25, r=25, b=25),   font=dict(family="Open Sans, sans-serif", size=12, color="grey"),
     coloraxis_colorbar=dict(title="Recency"))
+treemap.add_annotation(text="Source: WiTH Africa, 2023, Lighter shades indicate better performance", xref="paper", yref="paper",
+                    x=0, y=-0.065, showarrow=False, font=dict(size=15, color="lightgray"))
+
 st.write("""
         # Number of Indicators Across All Data Sources
         Explore the hierarchical breakdown of the number of indicators, starting from the broad categories of data sources down to the specific entities. This treemap visually represents the number of indicators for each source, allowing you to discern which entities provide the most comprehensive data in the ecosystem.
@@ -203,7 +219,7 @@ st.write("""
 tabcount, tabreg = st.tabs(['Countries', 'Regions'])
 with tabcount:
     selected_countries = st.multiselect("Select countries for comparison", df_gov_results['country'].tolist())
-    print(selected_countries)
+
     if selected_countries:
         selected_df = df_gov_results[df_gov_results['country'].isin(selected_countries)]
         
@@ -256,7 +272,8 @@ with tabcount:
                 #margin=dict(l=200)  # Adjust left margin for long region names if needed
             ) 
             st.plotly_chart(fig)
-
+    else:
+        st.warning('Please Select Countries to Compare', icon="⚠️")
 
 with tabreg:
     selected_regions = st.multiselect("Select regions for comparison", df_gov_results['region'].unique().tolist())
@@ -272,7 +289,7 @@ with tabreg:
 
         with tabindic:
             fig = px.bar(selected_df_region, x='region', y='num_indicators', color='num_indicators',hover_data = ['recency','num_indicators'],
-                                            color_continuous_scale= 'oranges_r')
+                                            color_continuous_scale= 'oranges_r', width=1000)
             fig.update_layout(
                 xaxis=dict(title='Region', tickfont=dict(size=20, family="Open Sans"), range=[0, 4]),
                 yaxis=dict(title='Number of Indicators', tickfont=dict(size=20, family="Open Sans")),
@@ -289,7 +306,7 @@ with tabreg:
                     y='year_score',
                     color='recency', 
                     hover_data = ['recency'],
-                    color_continuous_scale= 'oranges_r'
+                    color_continuous_scale= 'oranges_r', width=1000
                     )  # Color based on recency
             fig.update_layout(
                 xaxis=dict(title='Region', tickfont=dict(size=20, family="Open Sans"), range=[0, 4]),
@@ -303,7 +320,7 @@ with tabreg:
             st.plotly_chart(fig)
         with tabscore:
             fig = px.bar(selected_df_region, x='region', y='final_score', color='final_score',hover_data = ['recency','final_score'],
-                                            color_continuous_scale= 'oranges_r')
+                                            color_continuous_scale= 'oranges_r', width=1000)
             fig.update_layout(
                 xaxis=dict(title='Region', tickfont=dict(size=20, family="Open Sans"), range=[0, 4]),
                 yaxis=dict(title='Ease of Access Score', tickfont=dict(size=20, family="Open Sans")),
@@ -323,7 +340,7 @@ with tabreg:
             fig = px.box(selected_df_region_box.sort_values(by=['region'], ascending=True), 
                         x="region", 
                         y="final_score", 
-                        color="region")
+                        color="region", width=1000)
 
             # Customize the layout
             fig.update_layout(
@@ -341,6 +358,8 @@ with tabreg:
             st.write("""
             The box plot illustrates the distribution of 'Ease of Access' scores across African regions. Each box captures the range of scores within a region, with the line marking the median. Outliers represent countries with scores deviating notably from their regional trend.
             """)
+    else:
+        st.warning('Please Select Regions to Compare', icon="⚠️")
 
 
 
@@ -359,9 +378,26 @@ with tab1:
 
 with tab3:
     text = df_infotext[df_infotext['InfoText_ID'] == 2]['Section'].iloc[0]
+    st.latex(r'''
+    Score_{EaseOfAccess} = 0.3 * (Score_{year}) + 0.3 * (Score_{indicators}) + 0.3 * (Machine Readability) + 0.1 * (Security)
+    
+    ''')
+    st.write("""
+    * The recency of data was scored between 0 to 5. The exact criteria is available in the dataframe below. 
+    * Datasets were scored from 0 to 5 based on the number of indicators they contained. A logarithmic transformation was applied to the number of indicators such that the impact of each additional indicator diminishes as the total number increases. This transformation was aimed to avoid disproportionately high scores for sources with a large number of indicators while still accounting for their comprehensiveness. The scoring was contained to each subset of sources, i.e the transformation was applied at the category level (government, insitutions, ngos). 
+    * *MachineReadability* is a binary variable, taking the value one if machine readable data is provided, and zero otherwise. 
+    * *Security* is also a binary variable, taking the value one if no warning was given by the internet browser when accessing the website, and 0 otherwise. 
+             """)
+    df_score = pd.DataFrame(
+        {
+            'Year_Score' : [0 , 1, 2, 3, 4, 5],
+            'Legend' : ['Data not available', 'Data available before the year 2000', 'Data from 2001 to 2006 ', 'Data from 2007 to 2012' , 'Data from 2013 to 2018', 'Data from 2018 and above']
+        }
+    )
+    st.dataframe(df_score)
     st.write(f"""
     {text}
     """)
     
-    st.dataframe(df_scorelegend)  # Same as st.write(df)
+    st.dataframe(df_scorelegend.rename(columns={'Score' : 'Ease of Access Score', 'Legend_Description' : 'Description'}))  # Same as st.write(df)
 
