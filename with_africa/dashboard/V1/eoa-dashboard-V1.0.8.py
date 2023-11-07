@@ -51,6 +51,47 @@ def load_tables():
 df_infotext, df_scorelegend = load_tables()
 df_eoa = load_data()
 df_gov_results, df_ngos_results, df_org_results = load_data_new()
+# Adjusting the function to remove the specific information and focus on standout aspects and regional comparison
+def create_summary_comment(row, region_stats):
+    # Determine standout features
+    standout_features = []
+    if row['year_score'] == 5:
+        standout_features.append("very recent data")
+    elif row['year_score'] == 0:
+        standout_features.append("outdated data")
+    
+    if row['indic_score'] == 5:
+        standout_features.append("a full range of indicators")
+    elif row['indic_score'] == 0:
+        standout_features.append("very few indicators")
+    
+    if row['security_warning'] == 0:
+        standout_features.append("security concerns")
+    
+    if row['odfa_star'] == 1:
+        standout_features.append("data exclusive to ODFA")
+    
+    # Check if country has the highest or lowest final score within its region
+    regional_comparison = ""
+    if row['final_score'] == region_stats['max'][row['region']]:
+        regional_comparison = "top accessibility score in its region"
+    elif row['final_score'] == region_stats['min'][row['region']]:
+        regional_comparison = "lowest accessibility score in its region"
+    elif row['final_score'] > region_stats['mean'][row['region']]:
+        regional_comparison = "above-average accessibility score in its region"
+    else:
+        regional_comparison = "below-average accessibility score in its region"
+    
+    # Combine standout features and regional comparison
+    comment = f"{row['country']} stands out for {' and '.join(standout_features)} and has {regional_comparison}."
+    
+    # Limit the comment to 50 words
+    return ' '.join(comment.split()[:50])
+
+
+region_stats = df_gov_results.groupby('region')['final_score'].agg(['mean', 'max', 'min']).to_dict()
+# Apply the function to each row in the DataFrame to create the summaries
+df_gov_results['comments'] = df_gov_results.apply(lambda row: create_summary_comment(row, region_stats), axis=1)
 
 st.title("African Tourism Data Accessibility (2023)")
 st.write("""
@@ -59,7 +100,7 @@ st.write("""
 _____
 
 """)
-countries = df_eoa['Country'].unique().tolist()
+countries = df_gov_results['country'].unique().tolist()
 
 col1, col2 = st.columns(2)
 
@@ -85,7 +126,6 @@ with col1:
         [1, '#e65100']
     ]
 
-    df_eoa['EOA_Score'] = df_eoa['EOA_Score'].astype(int)
     min_value = df_gov_results[dic[option]].min()
     max_value = df_gov_results[dic[option]].max()
 
@@ -152,7 +192,7 @@ with col2:
     'Select a country',options = countries)
     eoa = df_gov_results[df_gov_results['country'] == option]['final_score'].iloc[0]
     link = df_gov_results[df_gov_results['country'] == option]['link'].iloc[0]
-    comment = df_eoa[df_eoa['Country'] == option]['Comments'].iloc[0]
+    comment = df_gov_results[df_gov_results['country'] == option]['comments'].iloc[0]
     num_indic = df_gov_results[df_gov_results['country'] == option]['num_indicators'].iloc[0]
 
     machine_read = ['Available' if df_gov_results[df_gov_results['country'] == option]['machine_read'].iloc[0] == 1 else 'Not Available']
