@@ -7,6 +7,7 @@ import plotly.express as px
 import distinctipy
 import requests
 from matplotlib import font_manager
+st.set_page_config(layout="wide")
 streamlit_style = """
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
@@ -22,7 +23,6 @@ streamlit_style = """
     </style>
 """
 st.markdown(streamlit_style, unsafe_allow_html=True)
-st.set_page_config(layout="wide")
 # Load the data
 @st.cache_data
 def load_data():
