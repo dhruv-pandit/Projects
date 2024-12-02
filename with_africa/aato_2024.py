@@ -22,6 +22,7 @@ streamlit_style = """
     </style>
 """
 st.markdown(streamlit_style, unsafe_allow_html=True)
+st.set_page_config(layout="wide")
 # Load the data
 @st.cache_data
 def load_data():
