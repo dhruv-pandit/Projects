@@ -7,4 +7,4 @@ pywaffle==1.1.1
 Requests==2.32.3
 seaborn==0.13.2
 streamlit==1.40.2
-numpy==2.1.0
+numpy==1.26.4
